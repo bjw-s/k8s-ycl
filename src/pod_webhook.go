@@ -43,36 +43,28 @@ func (m *podMutator) Default(ctx context.Context, obj runtime.Object) error {
 	}
 
 	for _, container := range pod.Spec.InitContainers {
-		if removeContainerLimits(&container, corev1.ResourceCPU) {
-			log.Info("Removed resource limit", "pod", pod.ObjectMeta, "container", container.Name, "limit", corev1.ResourceCPU)
-		}
+		removeContainerLimits(&container, corev1.ResourceCPU, pod)
 	}
 
 	for _, container := range pod.Spec.Containers {
-		if removeContainerLimits(&container, corev1.ResourceCPU) {
-			log.Info("Removed resource limit", "pod", pod.ObjectMeta, "container", container.Name, "limit", corev1.ResourceCPU)
-		}
-
-		if removeContainerLimits(&container, corev1.ResourceMemory) {
-			log.Info("Removed resource limit",
-				"namespace", pod.Namespace,
-				"pod", getPodName(pod),
-				"container", container.Name,
-				"limit", corev1.ResourceMemory,
-			)
-		}
+		removeContainerLimits(&container, corev1.ResourceCPU, pod)
 	}
 	return nil
 }
 
-func removeContainerLimits(container *corev1.Container, limitType corev1.ResourceName) bool {
+func removeContainerLimits(container *corev1.Container, limitType corev1.ResourceName, pod *corev1.Pod) {
+	log := logf.Log
 	limits := container.Resources.Limits
 	_, cpuLimitExists := limits[limitType]
 	if cpuLimitExists {
 		delete(limits, limitType)
-		return true
+		log.Info("Removed resource limit",
+			"namespace", pod.Namespace,
+			"pod", getPodName(pod),
+			"container", container.Name,
+			"limit", limitType,
+		)
 	}
-	return false
 }
 
 func getPodName(pod *corev1.Pod) string {
