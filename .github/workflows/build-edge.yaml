@@ -1,18 +1,14 @@
 ---
-name: Build and release application
+name: Build and push rolling tag
 
 on:
   push:
     branches:
-      - "main"
-      - "development"
-    tags:
-      - "v*"
+      - main
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
-
-concurrency:
-  group: build-and-release-app
-  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -45,9 +41,8 @@ jobs:
           images: |
             ghcr.io/${{ github.repository_owner }}/k8s-ycl
           tags: |
-            type=raw,value=rolling,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+            type=raw,value=rolling
             type=ref,event=branch
-            type=ref,event=tag
 
       - name: Build and push
         uses: docker/build-push-action@v5
@@ -55,13 +50,6 @@ jobs:
           context: .
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
-          push: true
+          push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-
-      - name: Create GitHub release
-        # Create a release when a tag is pushed
-        if: success() && startsWith(github.ref, 'refs/tags/')
-        uses: ncipollo/release-action@v1
-        with:
-          generateReleaseNotes: true
