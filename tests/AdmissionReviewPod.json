@@ -1,0 +1,83 @@
+{
+    "kind": "AdmissionReview",
+    "apiVersion": "admission.k8s.io/v1beta1",
+    "request": {
+        "uid": "14eb0990-4dd4-42b2-add3-f0ca607e78fd",
+        "resource": {
+            "version": "v1",
+            "resource": "Pod"
+        },
+        "name": "web-app-pod-54892",
+        "namespace": "dev-namespace-789",
+        "operation": "CREATE",
+        "object": {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "app.environment": "production",
+                    "app.description": "This pod runs a microservice for processing user data.",
+                    "app.customMetadata": "key1=value1, key2=value2",
+                    "k8s-ycl.bjw-s.dev/keep-limit": "false"
+                },
+                "creationTimestamp": "2023-12-03T12:09:41Z",
+                "generateName": "web-app-pod-",
+                "labels": {
+                    "app": "web-app",
+                    "environment": "production",
+                    "tier": "frontend",
+                    "owner": "team-1",
+                    "release": "v2.1.3"
+                },
+                "name": "web-app-pod-54892",
+                "namespace": "dev-namespace-789",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "StatefulSet",
+                        "name": "web-app-pod",
+                        "uid": "aa8e3e9e-31ec-4ace-9d59-a8e9976d620f"
+                    }
+                ],
+                "resourceVersion": "173471645",
+                "uid": "14eb0990-4dd4-42b2-add3-f0ca607e78fd"
+            },
+            "spec": {
+                "automountServiceAccountToken": true,
+                "containers": [
+                    {
+                        "name": "web-app-container",
+                        "image": "nginx:latest",
+                        "ports": [
+                            {
+                                "containerPort": 80
+                            }
+                        ],
+                        "env": [
+                            {
+                                "name": "APP_ENV",
+                                "value": "production"
+                            },
+                            {
+                                "name": "DEBUG_MODE",
+                                "value": "false"
+                            }
+                        ]
+                    }
+                ],
+                "resources": {
+                    "limits": {
+                        "cpu": "0.5",
+                        "memory": "512Mi"
+                    },
+                    "requests": {
+                        "cpu": "0.2",
+                        "memory": "256Mi"
+                    }
+                }
+            }
+        }
+    }
+}
