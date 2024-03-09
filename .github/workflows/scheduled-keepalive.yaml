@@ -29,7 +29,7 @@ jobs:
           token: ${{ steps.get-app-token.outputs.token }}
 
       - name: Keep scheduled GitHub workflows alive
-        uses: gautamkrishnar/keepalive-workflow@v1
+        uses: gautamkrishnar/keepalive-workflow@v2
         with:
           gh_token: ${{ steps.get-app-token.outputs.token }}
           committer_username: "bjw-s-bot[bot]"
