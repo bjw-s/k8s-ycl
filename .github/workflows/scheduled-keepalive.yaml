@@ -13,24 +13,10 @@ on:
 
 jobs:
   keepalive:
-    name: Keep scheduled GitHub workflows alive
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get GitHub API token
-        id: get-app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.BJWS_APP_ID }}
-          private-key: ${{ secrets.BJWS_APP_PRIVATE_KEY }}
-
-      - name: Checkout main branch
-        uses: actions/checkout@v4
-        with:
-          token: ${{ steps.get-app-token.outputs.token }}
-
-      - name: Keep scheduled GitHub workflows alive
-        uses: gautamkrishnar/keepalive-workflow@v1
-        with:
-          gh_token: ${{ steps.get-app-token.outputs.token }}
-          committer_username: "bjw-s-bot[bot]"
-          committer_email: "bjw-s-bot <87358111+bjw-s-bot[bot]@users.noreply.github.com>"
+    name: Renovate
+    uses: bjw-s/gh-workflows/.github/workflows/keepalive.yaml@main
+    permissions:
+      contents: write
+    secrets:
+      app_id: ${{ secrets.BJWS_APP_ID }}
+      app_private_key: ${{ secrets.BJWS_APP_PRIVATE_KEY }}
