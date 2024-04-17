@@ -2,7 +2,7 @@ module github.com/bjw-s/k8s-ycl
 
 go 1.21
 
-toolchain go1.21.5
+toolchain go1.22.2
 
 require (
 	k8s.io/api v0.29.4
